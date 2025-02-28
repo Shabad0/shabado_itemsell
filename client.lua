@@ -1,7 +1,7 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 local spawnedPeds = {}
-local pedMapping = {} -- Mapping ped entity to its configuration (includes ped name and items)
 
+-- Spawn each ped defined in Config and add qb-target interactions.
 Citizen.CreateThread(function()
     for _, pedData in pairs(Config.Peds) do
         local model = GetHashKey(pedData.model)
@@ -16,9 +16,8 @@ Citizen.CreateThread(function()
         SetBlockingOfNonTemporaryEvents(ped, true)
 
         table.insert(spawnedPeds, ped)
-        pedMapping[ped] = pedData -- Save ped's config data
 
-        -- Add qb-target for this ped, passing both items and pedName in the data
+        -- Add qb-target for the spawned ped.
         exports['qb-target']:AddTargetEntity(ped, {
             options = {
                 {
@@ -26,9 +25,8 @@ Citizen.CreateThread(function()
                     event = "myScript:sellItems",
                     icon = "fas fa-shopping-cart",
                     label = "Sell Items",
-                    data = {
-                        items = pedData.items,
-                        pedName = pedData.name
+                    data = {  -- You can also try using 'params' here if 'data' isn’t working.
+                        items = pedData.items
                     }
                 }
             },
@@ -37,34 +35,31 @@ Citizen.CreateThread(function()
     end
 end)
 
--- Event to open the sell menu
+-- Open the sell menu when a player interacts with the ped.
 RegisterNetEvent('myScript:sellItems', function(data, entity)
    -- print("sellItems event data:", json.encode(data))
     
-    -- Retrieve the items table (check possible nesting)
+    -- Check for items in different possible structures:
     local items = data.items or (data.data and data.data.items) or (data.params and data.params.items)
+    
     if not items then
-       -- print("Error: No items provided to sell.")
+        print("Error: No items provided to sell.")
         return
-    end
-
-    -- Retrieve the ped's name either from the passed data or by looking up the entity mapping
-    local pedName = data.pedName or (data.data and data.data.pedName) or "Sell Items"
-    if entity and pedMapping[entity] and pedMapping[entity].name then
-        pedName = pedMapping[entity].name
     end
 
     local menu = {
         {
-            header = pedName, -- Dealer name at the top
+            header = "Sell Items",
             isMenuHeader = true,
         }
     }
 
     for _, item in ipairs(items) do
+        local itemData = QBCore.Shared.Items[item.name]
+        local displayLabel = item.label or (itemData and itemData.label or item.name)
         table.insert(menu, {
-            header = item.name .. " - $" .. item.price,
-            txt = "Sell your " .. item.name,
+            header = displayLabel .. " - $" .. item.price,
+            txt = "Sell your " .. displayLabel,
             params = {
                 event = "myScript:sellItem",
                 args = { item = item }
@@ -78,18 +73,11 @@ RegisterNetEvent('myScript:sellItems', function(data, entity)
         params = { event = "qb-menu:closeMenu" }
     })
 
-   -- print("Opening menu with items:", json.encode(menu))
     exports['qb-menu']:openMenu(menu)
 end)
 
--- Event that is triggered when a player selects an item to sell from the menu
+-- When an item is selected from the menu, trigger a server event to process the sale.
 RegisterNetEvent('myScript:sellItem', function(data)
-    if not data or not data.item then
-   --     print("Error: No item data passed to sellItem event.")
-        return
-    end
-
     local item = data.item
-  --  print("Attempting to sell item:", json.encode(item))
     TriggerServerEvent('myScript:processSale', item)
 end)
