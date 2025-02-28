@@ -14,11 +14,11 @@ This gives you complete flexibility to create unique and interactive sell zones 
 
 ## Installation
 1. Download the Resource:
-  *Clone or download the repository into your resources folder.
+  * Clone or download the repository into your resources folder.
 2. Configure Server Files:
- *Add the resource to your server configuration (e.g., in server.cfg) ensuring it loads after the required dependencies.
+ * Add the resource to your server configuration (e.g., in server.cfg) ensuring it loads after the required dependencies.
 3. Restart Your Server:
-  *Once installed, restart your server for the changes to take effect.
+  * Once installed, restart your server for the changes to take effect.
 
 ## Dependency
 
