@@ -12,7 +12,7 @@ Location: Specify the exact coordinates and heading for the ped.
 Items: Define which items can be sold and whether their price is fixed or randomly generated.
 This gives you complete flexibility to create unique and interactive sell zones throughout your server.
 
-Installation
+## Installation
 1. Download the Resource:
   *Clone or download the repository into your resources folder.
 2. Configure Server Files:
