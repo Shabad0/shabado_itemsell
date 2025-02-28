@@ -5,12 +5,12 @@ Configurable Sell Locations for QBCore
 A lightweight resource for creating configurable selling points in your QBCore-based server. This script allows you to define various in-game sell locations with customizable NPCs (peds), locations, and item pricing—making it easy to tailor the selling experience to your server's theme.
 
 Overview
-The shabado_itemsell resource lets you set up in-game selling points where players can sell items for in-game currency. Each sell location is defined by:
+The shabado_itemsell resource lets you set up selling points where players can sell items. Each sell location is defined by:
 
 NPC Information: Customize the ped’s name and model.
 Location: Specify the exact coordinates and heading for the ped.
 Items: Define which items can be sold and whether their price is fixed or randomly generated.
-This gives you complete flexibility to create unique and interactive sell zones throughout your game world.
+This gives you complete flexibility to create unique and interactive sell zones throughout your server.
 
 Installation
 1. Download the Resource:
@@ -41,10 +41,6 @@ Installation
         { 
             name = "change_me", 
             price = 3500  -- Fixed price example 
-        },
-        { 
-            name = "change_me", 
-            price = 3500  -- Additional fixed price example 
         },
     },
 }
